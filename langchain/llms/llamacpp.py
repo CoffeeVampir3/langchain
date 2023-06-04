@@ -102,6 +102,15 @@ class LlamaCpp(LLM):
 
     streaming: bool = True
     """Whether to stream the results, token by token."""
+    
+    mirostat: Optional[int] = 0
+    """Top K, Nucleus, Tail Free and Locally Typical samplers are ignored if used. (default: 0, 0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0) """
+    
+    mirostat_lr: Optional[int] = 0.1
+    """Mirostat learning rate, parameter eta (default: 0.1) """
+    
+    mirostat_ent: Optional[int] = 5
+    """Mirostat target entropy, parameter tau (default: 5.0)"""
 
     @root_validator()
     def validate_environment(cls, values: Dict) -> Dict:
@@ -121,6 +130,9 @@ class LlamaCpp(LLM):
             "n_batch",
             "use_mmap",
             "last_n_tokens_size",
+            "mirostat",
+            "mirostat_lr",
+            "mirostat_ent",
         ]
         model_params = {k: values[k] for k in model_param_names}
         # For backwards compatibility, only include if non-null.
